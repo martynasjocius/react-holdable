@@ -1,0 +1,25 @@
+{
+  "name": "react-click-hold",
+  "version": "1.0.0",
+  "description": "Simple and beautiful click-and-hold handler for React apps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martynasjocius/react-click-hold.git"
+  },
+  "keywords": [
+    "long-press",
+    "hold",
+    "button",
+    "hold"
+  ],
+  "author": "Martynas Jocius",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/martynasjocius/react-click-hold/issues"
+  },
+  "homepage": "https://github.com/martynasjocius/react-click-hold#readme"
+}

@@ -51,4 +51,4 @@ When users clicks and holds for 1000 ms (this can be changed via `timeout` prope
 
 For questions and bug reports please refer to GitHub issues: https://github.com/martynasjocius/react-holdable/issues
 
-Developed with 💖 by [jocius.net](jocius.net) for [tipihub.com](tipihub.com).
+Developed with 💖 by [jocius.net](https://jocius.net) for [tipihub.com](https://tipihub.com).

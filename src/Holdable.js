@@ -15,6 +15,10 @@ export default class Holdable extends Component {
   }
 
   handleClick(e) {
+    e.persist()
+    e.preventDefault()
+    e.stopPropagation()
+
     this.setState({
       clickedAt: new Date()
     }, () => {
@@ -30,6 +34,10 @@ export default class Holdable extends Component {
   }
 
   handleFinish(e) {
+    e.persist()
+    e.preventDefault()
+    e.stopPropagation()
+
     if (!this.state.clickedAt) {
       return
     }

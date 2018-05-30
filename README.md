@@ -1,1 +1,1 @@
-# react-click-hold
+# React Holdable

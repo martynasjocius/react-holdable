@@ -1,25 +1,26 @@
 {
-  "name": "react-click-hold",
+  "name": "react-holdable",
   "version": "1.0.0",
-  "description": "Simple and beautiful click-and-hold handler for React apps",
+  "description": "Simple click-and-hold event wrapper for React components",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/martynasjocius/react-click-hold.git"
+    "url": "git+https://github.com/martynasjocius/react-holdable.git"
   },
   "keywords": [
+    "react",
+    "react-component",
     "long-press",
-    "hold",
-    "button",
+    "click",,
     "hold"
   ],
   "author": "Martynas Jocius",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/martynasjocius/react-click-hold/issues"
+    "url": "https://github.com/martynasjocius/react-holdable/issues"
   },
-  "homepage": "https://github.com/martynasjocius/react-click-hold#readme"
+  "homepage": "https://github.com/martynasjocius/react-holdable#readme"
 }

@@ -10,7 +10,7 @@ $ npm install react-holdable --save
 
 ## Usage
 
-```
+```js
 import React, { Component } from 'react'
 import Holdable from 'react-holdable'
 

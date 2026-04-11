@@ -1,84 +1,107 @@
-import React, { Component } from 'react'
-
-export default class Holdable extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      clickedAt: null
-    }
-
-    this.intervalId = null
-
-    this.handleClick = this.handleClick.bind(this)
-    this.handleFinish = this.handleFinish.bind(this)
+(function(root, factory) {
+  if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('react'))
+    module.exports.default = module.exports
+    return
   }
 
-  handleClick(e) {
-    e.persist()
-    e.preventDefault()
-    e.stopPropagation()
+  root.ReactHoldable = factory(root.React)
+}(typeof globalThis !== 'undefined' ? globalThis : this, function(React) {
+  function Holdable(props) {
+    const activeRef = React.useRef(false)
+    const holdTriggeredRef = React.useRef(false)
+    const timerRef = React.useRef(null)
+    const [isActive, setIsActive] = React.useState(false)
 
-    this.setState({
-      clickedAt: new Date()
-    }, () => {
-      this.intervalId = setInterval(() => {
-        const timeDelta = new Date() - this.state.clickedAt
-        const timeout = this.props.timeout || 1000
+    const timeout = props.timeout || 1000
 
-        if (this.state.clickedAt && timeDelta >= timeout) {
-          this.handleFinish(e)
+    const clearTimer = React.useCallback(() => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+        timerRef.current = null
+      }
+    }, [])
+
+    React.useEffect(() => clearTimer, [clearTimer])
+
+    const stopEvent = React.useCallback((event) => {
+      event.preventDefault()
+      event.stopPropagation()
+    }, [])
+
+    const handlePressStart = React.useCallback((event) => {
+      stopEvent(event)
+      clearTimer()
+
+      if (event.persist) {
+        event.persist()
+      }
+
+      activeRef.current = true
+      holdTriggeredRef.current = false
+      setIsActive(true)
+
+      timerRef.current = setTimeout(() => {
+        if (!activeRef.current) {
+          return
         }
-      }, 100)
-    })
-  }
 
-  handleFinish(e) {
-    e.persist()
-    e.preventDefault()
-    e.stopPropagation()
+        holdTriggeredRef.current = true
+        clearTimer()
 
-    if (!this.state.clickedAt) {
-      return
-    }
+        if (props.onHoldComplete) {
+          props.onHoldComplete(event)
+        }
+      }, timeout)
+    }, [clearTimer, props, stopEvent, timeout])
 
-    if (this.intervalId) {
-      clearInterval(this.intervalId)
-    }
+    const handlePressEnd = React.useCallback((event) => {
+      stopEvent(event)
 
-    const timeDelta = new Date() - this.state.clickedAt
-    const timeout = this.props.timeout || 1000
-
-    if (timeDelta < timeout) {
-      if (this.props.onClickComplete) {
-        this.props.onClickComplete(e)
+      if (!activeRef.current) {
+        return
       }
-    } else {
-      if (this.props.onHoldComplete) {
-        this.props.onHoldComplete(e)
+
+      activeRef.current = false
+      setIsActive(false)
+      clearTimer()
+
+      if (!holdTriggeredRef.current && props.onClickComplete) {
+        props.onClickComplete(event)
       }
-    }
+    }, [clearTimer, props, stopEvent])
 
-    this.setState({
-      clickedAt: null
-    })
-  }
+    const handlePressCancel = React.useCallback((event) => {
+      stopEvent(event)
 
-  render() {
-    const classNames = 'holdable' +
-      (this.props.className ? ` ${this.props.className}` : '') +
-      (this.state.clickedAt ? ' holdable-active' : '')
+      if (!activeRef.current) {
+        return
+      }
 
-    return (
-      <div
-        className={classNames}
-        onMouseDown={this.handleClick}
-        onTouchStart={this.handleClick}
-        onMouseUp={this.handleFinish}
-        onTouchCancel={this.handleFinish}
-        onTouchEnd={this.handleFinish}>
-        {this.props.children}
-      </div>
+      activeRef.current = false
+      holdTriggeredRef.current = false
+      setIsActive(false)
+      clearTimer()
+    }, [clearTimer, stopEvent])
+
+    const classNames = [
+      'holdable',
+      props.className,
+      isActive ? 'holdable-active' : null
+    ].filter(Boolean).join(' ')
+
+    return React.createElement(
+      'div',
+      {
+        className: classNames,
+        onPointerDown: handlePressStart,
+        onPointerUp: handlePressEnd,
+        onPointerCancel: handlePressCancel,
+        onPointerLeave: handlePressCancel
+      },
+      props.children
     )
   }
-}
+
+  return Holdable
+}))

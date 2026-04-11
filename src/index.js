@@ -1,4 +1,1 @@
-import Holdable from './Holdable'
-
-export default Holdable
-
+module.exports = require('./Holdable')
